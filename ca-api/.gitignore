@@ -1,3 +1,5 @@
 .env
 vendor
 tmp
+
+**/ecdsa_private.pem

@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,22 +11,76 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PasswordField } from "./Password"
+import React, { useState } from "react"
+import { toast } from "sonner"
 
-export function SignupForm({
+
+interface SignUpForm {
+  fname: string;
+  lname: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+}
+
+export function SignupPage({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [formData, setFormData] = useState<SignUpForm>({
+    fname: "",
+    lname: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+    
+      const data = await res.json();
+    
+      if (!res.ok) {
+        toast.error(data.error?.message || "Something went wrong!");
+        return;
+      }
+      
+      toast.success("Welcome " + data.username || "Signup complete!",
+        {
+          description: data?.message
+        },
+      );
+  
+    } catch (err) {
+      console.error(err);
+      toast.error("Error connecting to server.");
+    }
+  };
+  
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Sign Up</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+            Login with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
                 <Button variant="outline" className="w-full">
@@ -56,6 +111,8 @@ export function SignupForm({
                       id="fname"
                       type="text"
                       placeholder="John"
+                      value={formData.fname}
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -65,6 +122,8 @@ export function SignupForm({
                       id="lname"
                       type="text"
                       placeholder="Doe"
+                      value={formData.lname}
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -77,13 +136,26 @@ export function SignupForm({
                     id="email"
                     type="email"
                     placeholder="m@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
 
                 {/* Password */}
-                <PasswordField />
+                <PasswordField
+                  forgetPass={false}
+                  LabelName="Password"
+                  value={formData.password}
+                  onChange={(value) => setFormData({ ...formData, password: value })}
+                />
 
+                <PasswordField
+                  forgetPass={false}
+                  LabelName="Confirm Password"
+                  value={formData.confirm_password}
+                  onChange={(value) => setFormData({ ...formData, confirm_password: value })}
+                />
                 <Button type="submit" className="w-full">
                   Create Account
                 </Button>

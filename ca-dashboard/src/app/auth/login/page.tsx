@@ -1,15 +1,13 @@
 import { GalleryVerticalEnd } from "lucide-react"
-
-import { LoginForm } from "@/components/AuthForms/login-form"
 import { Metadata } from "next";
 import { APP_NAME } from "@/config/constants";
-
+import { LoginPage } from "@/components/AuthForms/login-form";
 
 export const metadata: Metadata = {
   title: 'Log in for' + APP_NAME,
 }
 
-export default function LoginPage() {
+export default function Login() {
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -19,7 +17,7 @@ export default function LoginPage() {
           </div>
           {APP_NAME}
         </a>
-        <LoginForm />
+        <LoginPage />
       </div>
     </div>
   )

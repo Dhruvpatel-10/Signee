@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,22 +11,71 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { PasswordField } from "./Password"
+import { useState } from "react"
+import { toast } from "sonner"
 
-export function LoginForm({
+interface SigninForm {
+  email: string;
+  password: string;
+}
+
+
+export function LoginPage({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [formData, setFormData] = useState<SigninForm>(
+    {
+      email: "",
+      password: ""
+    }
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      });
+    
+      const data = await res.json();
+    
+      if (!res.ok) {
+        toast.error(data.error?.message || "Something went wrong!");
+        return;
+      }
+      
+      toast.success(data?.message || "Signup complete!",
+        {
+          description: data?.username
+        },
+      );
+  
+    } catch (err) {
+      console.error(err);
+      toast.error("Error connecting to server.");
+    }
+  };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+            Login with your Google account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
                 <Button variant="outline" className="w-full">
@@ -49,11 +99,20 @@ export function LoginForm({
                   <Input
                     id="email"
                     type="email"
+                    name="email"
                     placeholder="m@example.com"
+                    value={formData.email}
                     required
+                    onChange={handleChange}
                   />
                 </div>
-                <PasswordField />
+                <PasswordField
+                  forgetPass={true}
+                  LabelName="Password"
+                  value={formData.password}
+                  onChange={(value) => setFormData({ ...formData, password: value })}
+                />
+
                 <Button type="submit" className="w-full">
                   Login
                 </Button>

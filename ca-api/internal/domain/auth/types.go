@@ -2,17 +2,18 @@
 package auth
 
 import (
+	"net/http"
 	"time"
 
-	"github.com/google/uuid"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type SignupRequest struct {
 	Email           string `json:"email" binding:"required,email"`
 	Password        string `json:"password" binding:"required,min=8"`
 	ConfirmPassword string `json:"confirm_password" binding:"required,eqfield=Password"`
-	FirstName       string `json:"first_name" binding:"required"`
-	LastName        string `json:"last_name" binding:"required"`
+	FirstName       string `json:"fname" binding:"required"`
+	LastName        string `json:"lname" binding:"required"`
 }
 
 type LoginRequest struct {
@@ -20,18 +21,27 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type Session struct {
-	ID           string    `json:"id"`
-	UserID       uuid.UUID `json:"user_id"`
-	Email        string    `json:"email"`
-	Roles        []string  `json:"roles"`
-	Permissions  []string  `json:"permissions"`
-	IPAddress    string    `json:"ip_address"`
-	UserAgent    string    `json:"user_agent"`
-	CreatedAt    time.Time `json:"created_at"`
-	LastActivity time.Time `json:"last_activity"`
-	ExpiresAt    time.Time `json:"expires_at"`
-	MFAVerified  bool      `json:"mfa_verified"`
+// SecureClaims for JWT with encrypted fields
+type SecureClaims struct {
+	UserIDEnc       string `json:"uid_enc"` // Encrypted UserID
+	RoleEnc         string `json:"rol_enc"` // Encrypted Role
+	TokenType       string `json:"typ"`     // "access" or "refresh"
+	Fingerprint     string `json:"fp"`      // Browser fingerprint hash
+	IPHash          string `json:"iph"`     // IP address hash
+	DecryptedUserID string // Not serialized, used after decryption
+	DecryptedRole   string // Not serialized, used after decryption
+	jwt.RegisteredClaims
+}
+
+// SecureCookieConfig for secure cookies
+type SecureCookieConfig struct {
+	TokenName string
+	Domain    string
+	Path      string
+	MaxAge    uint32
+	Secure    bool
+	HttpOnly  bool
+	SameSite  http.SameSite
 }
 
 type TokenPair struct {

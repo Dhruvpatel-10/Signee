@@ -13,7 +13,7 @@ import (
 )
 
 var DefaultPassConfig = auth.PassConfig{
-	Time:    1,
+	Time:    3,
 	Memory:  64 * 1024,
 	Threads: 4,
 	KeyLen:  32,
@@ -86,7 +86,7 @@ func generateSalt(length int) ([]byte, error) {
 
 // Hashing password with argon2id
 func hashPassword(password string) (string, error) {
-	salt, err := generateSalt(16)
+	salt, err := generateSalt(32)
 	if err != nil {
 		return "", err
 	}

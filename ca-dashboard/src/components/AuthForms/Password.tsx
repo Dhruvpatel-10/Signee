@@ -6,27 +6,40 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
 
-export function PasswordField() {
+export function PasswordField({
+  forgetPass,
+  LabelName,
+  value,
+  onChange,
+}: {
+  forgetPass: boolean;
+  LabelName: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
     const [show, setShow] = useState(false)
     return (
-    <>
       <div className="grid gap-3">
         <div className="flex items-center">
-          <Label htmlFor="password">Password</Label>
-          <a
-            href="#"
-            className="ml-auto text-sm underline-offset-4 hover:underline"
-          >
-            Forgot your password?
-          </a>
+          <Label htmlFor="password">{LabelName}</Label>
+          {forgetPass && (
+            <a
+              href="#"
+              className="ml-auto text-sm underline-offset-4 hover:underline"
+            >
+              Forgot your password?
+            </a>
+          )}
         </div>
-
+  
         <div className="relative">
           <Input
             id="password"
             type={show ? "text" : "password"}
             required
             className="pr-10"
+            value={value}
+            onChange={(e) => onChange(e.target.value)} // 🔑 calls parent function
           />
           <Button
             type="button"
@@ -39,6 +52,5 @@ export function PasswordField() {
           </Button>
         </div>
       </div>
-    </>
-  );
-}
+    );
+  }
