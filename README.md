@@ -44,7 +44,7 @@ Frontend (Next.js)                     Backend (Go + Gin)
 - Unix Sockets
 - Elliptic Curve Cryptography & ChaCha20-Poly1305 (JWT)
 
-⚙️ Quick Start
+## ⚙️ Quick Start
 1. Clone the repo
 ```
 git clone https://github.com/Dhruvpatel-10/Signee.git
