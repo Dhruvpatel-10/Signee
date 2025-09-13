@@ -65,8 +65,8 @@ pnpm install
 pnpm run dev
 ```
 
-🔧 Example Code
-Backend: Go (Unix Socket Setup)
+## 🔧 Example Code
+**Backend: Go (Unix Socket Setup)**
 ```Go
 const socketPath = "/tmp/go.sock"
 
@@ -78,7 +78,7 @@ if useSocket := os.Getenv("USE_UNIX_SOCKET"); useSocket == "true" {
     server.Serve(listener)
 }
 ```
-Frontend: Next.js API Proxy
+**Frontend: Next.js API Proxy**
 ```ts
 const useUnixSocket = process.env.USE_UNIX_SOCKET === "true";
 const options: http.RequestOptions = useUnixSocket
