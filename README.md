@@ -1,4 +1,9 @@
-# 🔐 SSH CA Certificate Manager
+# 🔐 SSH CA Certificate Manager (In Development)
+
+> **Note:** This project is currently under active development.  
+> Not all features are complete or fully functional yet. Expect rapid iteration and breaking changes.
+
+---
 
 A **full-stack SSH Certificate Authority manager** with a **Go (Gin) backend** and **Next.js frontend**.  
 It provides **secure certificate issuance and access management** with **RBAC, MFA, elliptic curve JWTs, and Vault-based key signing**.  
@@ -100,3 +105,12 @@ This project solves that by providing:
 ✅ Centralized role-based access control
 ✅ Secure cryptographic guarantees
 ✅ Production-ready frontend for enterprise teams
+
+## 🤝 Contributing
+This project is still in early development — feedback and contributions are welcome!
+If you’d like to help shape its direction, feel free to open issues or PRs.
+
+## 📌 Roadmap
+v0.1 → Auth, Core certificate issuance & frontend UI prototype
+v0.2 → User accounts, RBAC, and certificate revocation
+v0.3 → Deployment-ready (Docker, CI/CD, docs)
